@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".screens.home.HomeFragment"
+    android:background="@color/primary_dark"
+    >
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/songLabel_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Songs"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:fontFamily="sans-serif-light"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_below="@+id/songLabel_textview"
+        android:id="@+id/songsList_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="5dp"
+        tools:listitem="@layout/single_song_recycler_view"
+
+        />
+
+
+</RelativeLayout>
