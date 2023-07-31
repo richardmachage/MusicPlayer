@@ -17,6 +17,7 @@ import com.example.musicplayer.models.Song
 import java.util.Timer
 import java.util.TimerTask
 import kotlin.concurrent.timerTask
+import kotlin.random.Random
 
 const val MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 111
 const val MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 112
@@ -32,6 +33,7 @@ class MainViewModel : ViewModel() {
     val myPlayer = MediaPlayer()
     var isResourceSet: Boolean
     var currentSongIndex = 0
+    var shuffleSongs = false
     //lateinit var currentSongObject : Song
 
 
@@ -39,7 +41,7 @@ class MainViewModel : ViewModel() {
         setPlayer()
         isResourceSet = false
         myPlayer.setOnCompletionListener {
-            playNext()
+            playNext(shuffleSongs)
             playSong()
         }
 
@@ -145,16 +147,22 @@ class MainViewModel : ViewModel() {
         listOfSongs[currentSongIndex].isCurrentlyPlaying = false
     }
 
-    fun playNext() {
+    fun playNext(shuffle : Boolean ) {
         //currentSongObject.isCurrentlyPlaying = false
         currentMusic.value?.isCurrentlyPlaying = false
 
         myPlayer.reset()
         setPlayer()
-        if (currentSongIndex != listOfSongs.lastIndex) {
-            currentSongIndex += 1
-        } else {
-            currentSongIndex = 0
+
+        if(shuffle){
+            currentSongIndex = Random.nextInt(listOfSongs.size + 1)
+        }
+        else {
+            if (currentSongIndex != listOfSongs.lastIndex) {
+                currentSongIndex += 1
+            } else {
+                currentSongIndex = 0
+            }
         }
         //currentSongObject = listOfSongs[currentSongIndex]
         currentMusic.value = listOfSongs[currentSongIndex]
@@ -184,6 +192,10 @@ class MainViewModel : ViewModel() {
                 .setUsage(AudioAttributes.USAGE_MEDIA)
                 .build()
         )
+    }
+
+    fun setSongRepeat(isRepeating:Boolean){
+        myPlayer.isLooping = isRepeating
     }
 
 

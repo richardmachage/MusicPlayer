@@ -139,10 +139,10 @@ class MainActivity : AppCompatActivity() {
         binding.nextImagebutton.setOnClickListener {
 
             if(viewModel.myPlayer.isPlaying){
-                viewModel.playNext()
+                viewModel.playNext(viewModel.shuffleSongs)
                 viewModel.playSong()
             }else{
-                viewModel.playNext()
+                viewModel.playNext(viewModel.shuffleSongs)
             }
            // setSongDetails(viewModel.listOfSongs[viewModel.currentSongIndex])
 
@@ -165,10 +165,14 @@ class MainActivity : AppCompatActivity() {
                     drawable.repeat_one_icon,
                     null
                 ).constantState
-            )
+            ){
                 binding.repeatImagebutton.setImageResource(drawable.repeat_icon)
-            else
+                viewModel.setSongRepeat(isRepeating = false)
+            }
+            else {
                 binding.repeatImagebutton.setImageResource(drawable.repeat_one_icon)
+                viewModel.setSongRepeat(isRepeating = true)
+            }
         }
 
         binding.shuffleImagebutton.setOnClickListener {
@@ -176,10 +180,17 @@ class MainActivity : AppCompatActivity() {
                     drawable.no_shuffle_icon,
                     null
                 ).constantState
-            )
+            ){
                 binding.shuffleImagebutton.setImageResource(drawable.shuffle_icon)
-            else
+                viewModel.shuffleSongs = false
+                Toast.makeText(applicationContext,"Shuffle off", Toast.LENGTH_SHORT).show()
+            }
+            else {
                 binding.shuffleImagebutton.setImageResource(drawable.no_shuffle_icon)
+                viewModel.shuffleSongs = true
+                Toast.makeText(applicationContext,"Shuffle on", Toast.LENGTH_SHORT).show()
+
+            }
         }
 
     }
