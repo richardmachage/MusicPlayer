@@ -72,14 +72,17 @@ class MainActivity : AppCompatActivity() {
             setSeekBar()
             binding.songNameTextView.text = song.songName
             binding.artistNameTextView.text = song.songArtist
+            //binding.songNameTextView.isSelected = true
         })
 
         //observer for play?pause button
         viewModel.playButtonState.observe(this, Observer { isplaying ->
             if (isplaying){
                 binding.playImagebutton.setImageResource(drawable.play_icon)
+                binding.songNameTextView.isSelected = false
             }else{
                 binding.playImagebutton.setImageResource(drawable.pause_icon)
+                binding.songNameTextView.isSelected = true
             }
         })
 

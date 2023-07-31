@@ -7,6 +7,7 @@
     app:cardElevation="3dp"
     app:cardCornerRadius="10dp"
     app:cardBackgroundColor="@color/primary_light"
+    android:layout_marginBottom="2dp"
     >
     <RelativeLayout
         android:layout_width="match_parent"
@@ -34,7 +35,7 @@
             android:textSize="18sp"
             android:layout_toRightOf="@id/music_icon"
             android:textColor="@color/white"
-
+            android:singleLine="true"
             />
 
         <com.google.android.material.textview.MaterialTextView
@@ -52,7 +53,6 @@
             android:id="@+id/musicPlaying_animation"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_toLeftOf="@id/options_button"
             android:padding="10dp"
             app:lottie_rawRes="@raw/music_anime"
             android:scaleType="centerCrop"
@@ -61,7 +61,7 @@
             android:visibility="invisible"
             />
 
-        <soup.neumorphism.NeumorphFloatingActionButton
+        <!--<soup.neumorphism.NeumorphFloatingActionButton
             android:id="@+id/options_button"
             android:layout_margin="5dp"
             android:padding="5dp"
@@ -73,7 +73,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            />
+            />-->
     </RelativeLayout>
 
 
