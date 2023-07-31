@@ -83,6 +83,9 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+        // songs number display
+
+
         // seekBar logic
         binding.seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {

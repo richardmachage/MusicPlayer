@@ -34,12 +34,12 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.songsListRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
         var adapter = SongRecyclerViewAdapter(requireContext(), viewModel.listOfSongs)
         binding.songsListRecyclerView.adapter = adapter
 
+        binding.songLabelTextview.text = "${viewModel.listOfSongs.size} Song(s)"
         //onClick Listener
         binding.songsListRecyclerView.onItemClick{recyclerView, position, v ->
             //Toast.makeText(requireContext(),"Song clicked: ${viewModel.listOfSongs[position].songName}", Toast.LENGTH_SHORT).show()

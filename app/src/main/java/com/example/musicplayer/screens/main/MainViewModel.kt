@@ -16,6 +16,7 @@ import com.example.musicplayer.adapters.SongRecyclerViewAdapter
 import com.example.musicplayer.models.Song
 import java.util.Timer
 import java.util.TimerTask
+import java.util.concurrent.TimeUnit
 import kotlin.concurrent.timerTask
 import kotlin.random.Random
 
@@ -54,9 +55,6 @@ class MainViewModel : ViewModel() {
     }
 
     fun setCurrentSongObject() {
-        //currentSongObject = listOfSongs[currentSongIndex]
-        //currentSongObject.isCurrentlyPlaying = true
-
         currentMusic.value = listOfSongs[currentSongIndex]
     }
 
@@ -97,9 +95,16 @@ class MainViewModel : ViewModel() {
             MediaStore.Audio.Media.ALBUM,
             MediaStore.Audio.Media.DATA
         )
+        //filters
+        val selection = "${MediaStore.Audio.Media.DURATION} >= ? AND ${MediaStore.Audio.Media.DATA} NOT LIKE ?"
+        val selectionArgs = arrayOf(
+            TimeUnit.SECONDS.toMillis(60).toString(), //filtered to Audio files longer than 60 secs
+            "%Recordings%" // filters out the audio files in the recordings directory
+
+        )
 
         //assign query results to a cursor
-        val cursor = contentResolver.query(musicUri, projection, null, null, null)
+        val cursor = contentResolver.query(musicUri, projection, selection, selectionArgs, null)
 
         //get contents of cursor into arraylist
         cursor?.use { cursor ->
