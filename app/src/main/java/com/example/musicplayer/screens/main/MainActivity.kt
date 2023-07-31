@@ -67,11 +67,20 @@ class MainActivity : AppCompatActivity() {
         }
 
         //observer for currentMusic
-        viewModel.currentMusic.observe(this, Observer {
+        viewModel.currentMusic.observe(this, Observer {song ->
             binding.seekbar.max = viewModel.currentMusic.value?.songDuration?.toInt() ?:0
             setSeekBar()
-            binding.songNameTextView.text = it.songName
-            binding.artistNameTextView.text = it.songArtist
+            binding.songNameTextView.text = song.songName
+            binding.artistNameTextView.text = song.songArtist
+        })
+
+        //observer for play?pause button
+        viewModel.playButtonState.observe(this, Observer { isplaying ->
+            if (isplaying){
+                binding.playImagebutton.setImageResource(drawable.play_icon)
+            }else{
+                binding.playImagebutton.setImageResource(drawable.pause_icon)
+            }
         })
 
         // seekBar logic
@@ -108,17 +117,18 @@ class MainActivity : AppCompatActivity() {
 
         //Play button
         binding.playImagebutton.setOnClickListener {
-            if (binding.playImagebutton.drawable.constantState == resources.getDrawable(R.drawable.pause_icon,null).constantState) {
+            if (  viewModel.myPlayer.isPlaying//binding.playImagebutton.drawable.constantState == resources.getDrawable(R.drawable.pause_icon,null).constantState
+            ) {
                 //first change the icon to show the play icon
-                binding.playImagebutton.setImageResource(drawable.play_icon)
-
+               // binding.playImagebutton.setImageResource(drawable.play_icon)
                 //then pause the music player
                 viewModel.pauseSong()
+                viewModel.playButtonState.value = true
 
             }
             else {
                 //first change the icon
-                binding.playImagebutton.setImageResource(drawable.pause_icon)
+                //binding.playImagebutton.setImageResource(drawable.pause_icon)
 
                 //then start the mediaPlayer and play a song
                 if(!viewModel.isResourceSet){
@@ -126,6 +136,8 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 viewModel.playSong()
+                viewModel.playButtonState.value = false
+
             }
         }
 
@@ -138,7 +150,6 @@ class MainActivity : AppCompatActivity() {
             }else{
                 viewModel.playNext(viewModel.shuffleSongs)
             }
-           // setSongDetails(viewModel.listOfSongs[viewModel.currentSongIndex])
 
         }
 

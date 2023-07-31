@@ -4,9 +4,11 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicplayer.databinding.SingleSongRecyclerViewBinding
 import com.example.musicplayer.models.Song
+import com.example.musicplayer.screens.main.MainViewModel
 
 class SongRecyclerViewAdapter(val context: Context,
                               var listOfSongs: ArrayList<Song>) :
@@ -24,14 +26,18 @@ class SongRecyclerViewAdapter(val context: Context,
             songNameTextView.text = listOfSongs[position].songName
             artistNameTextView.text = listOfSongs[position].songArtist
 
-            if (listOfSongs[position].isCurrentlyPlaying){
+            /*if (listOfSongs[position].isCurrentlyPlaying){
                 musicPlayingAnimation.visibility = View.VISIBLE
-            }
+            }*/
         }
+
+
     }
 
     override fun getItemCount(): Int = listOfSongs.size
 
 
     class songViewHolder(val binding: SingleSongRecyclerViewBinding) : RecyclerView.ViewHolder(binding.root)
+
+
 }

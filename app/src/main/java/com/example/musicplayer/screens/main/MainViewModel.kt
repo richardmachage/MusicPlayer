@@ -28,6 +28,7 @@ class MainViewModel : ViewModel() {
     lateinit var listOfSongs: ArrayList<Song>
     lateinit var context: Context
     var currentMusic = MutableLiveData<Song>()
+    var playButtonState = MutableLiveData<Boolean>()
     var currentSongPosition = MutableLiveData<Long>()
 
     val myPlayer = MediaPlayer()
@@ -127,13 +128,10 @@ class MainViewModel : ViewModel() {
     }
 
     fun selectSong() {
-        //var song = listOfSongs[currentSongIndex]
-        //myPlayer.setDataSource(/* path = */ currentSongObject.songFilePath)
         myPlayer.setDataSource(/* path = */ currentMusic.value?.songFilePath)
         myPlayer.prepare()
         isResourceSet = true
 
-        //setSeekBar()
     }
 
     fun playSong() {
@@ -164,11 +162,9 @@ class MainViewModel : ViewModel() {
                 currentSongIndex = 0
             }
         }
-        //currentSongObject = listOfSongs[currentSongIndex]
+
         currentMusic.value = listOfSongs[currentSongIndex]
         selectSong()
-        //setSeekBar()
-
     }
 
     fun playPrevious() {
@@ -185,7 +181,7 @@ class MainViewModel : ViewModel() {
        // setSeekBar()
     }
 
-    private fun setPlayer() {
+    fun setPlayer() {
         myPlayer.setAudioAttributes(
             AudioAttributes.Builder()
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
