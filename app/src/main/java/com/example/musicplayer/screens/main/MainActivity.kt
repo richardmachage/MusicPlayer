@@ -75,10 +75,6 @@ class MainActivity : AppCompatActivity() {
         })
 
         // seekBar logic
-        /*viewModel.currentSongPosition.observe(this, Observer {
-            binding.seekbar.progress = it.toInt()
-        })*/
-
         binding.seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
 
@@ -127,8 +123,6 @@ class MainActivity : AppCompatActivity() {
                 //then start the mediaPlayer and play a song
                 if(!viewModel.isResourceSet){
                     viewModel.selectSong()
-                   // setSongDetails(viewModel.listOfSongs[viewModel.currentSongIndex])
-                    Toast.makeText(applicationContext,"setting player & song to play", Toast.LENGTH_SHORT).show()
                 }
 
                 viewModel.playSong()
@@ -252,10 +246,10 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun setSongDetails(song: Song){
+    /*private fun setSongDetails(song: Song){
         binding.artistNameTextView.text = song.songArtist
         binding.songNameTextView.text = song.songName
-    }
+    }*/
 
     private fun setSeekBar() {
         var timer = Timer()
