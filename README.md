@@ -1,5 +1,6 @@
 # MusicPlayer
 So I was learning about the Media-Store API and made a music app
+
 Other details: Kotlin(100%), XML views, LottiesFiles animations, Room Database, etc...
 
 Still under development, about 70% completion
