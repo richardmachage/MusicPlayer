@@ -24,7 +24,8 @@ class BottomSheetSongOptions : BottomSheetDialogFragment(){
     ): View? {
 
         //inflate the view here
-        return inflater.inflate(R.layout.song_options_bottom_sheet, container, false)
+        bottomSheetBinding = SongOptionsBottomSheetBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

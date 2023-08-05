@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     private val binding get() = mainBinding
     private lateinit var viewModel: MainViewModel
     private var PERMISSION_REQUEST_CODE = 111
+    val bottomSheetSongOptions = BottomSheetSongOptions()
 
     private val permissions = arrayOf(
         Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -202,6 +203,10 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(applicationContext,"Shuffle on", Toast.LENGTH_SHORT).show()
 
             }
+        }
+
+        binding.songOptionsImagebutton.setOnClickListener {
+            bottomSheetSongOptions.show(supportFragmentManager,"Bottom sheet dialog")
         }
 
     }
