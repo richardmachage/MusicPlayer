@@ -17,6 +17,8 @@ class BottomSheetSongOptions : BottomSheetDialogFragment(){
     //attaching the shared view model
     private val viewModel : MainViewModel by activityViewModels()
 
+    private val viewDetailsBottomSheet = BottomSheetViewDetails()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -36,7 +38,11 @@ class BottomSheetSongOptions : BottomSheetDialogFragment(){
         }
 
         binding.viewDetailsLinearLayout.setOnClickListener {
-            Toast.makeText(requireContext(), "viewDetails clicked", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(requireContext(), "viewDetails clicked", Toast.LENGTH_SHORT).show()
+
+            viewDetailsBottomSheet.isCancelable = false
+            viewDetailsBottomSheet.show(parentFragmentManager, "View details bottoms sheet")
+            this.dismiss()
         }
 
         binding.shareLinearLayout.setOnClickListener {

@@ -235,7 +235,6 @@ class MainActivity : AppCompatActivity() {
             findNavController(R.id.fragmentContainerView).navigate(R.id.action_libraryFragment_to_homeFragment2)
         }
 
-
     }
 
     override fun onRequestPermissionsResult(
