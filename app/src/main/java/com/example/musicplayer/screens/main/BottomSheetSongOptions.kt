@@ -1,5 +1,6 @@
 package com.example.musicplayer.screens.main
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.example.musicplayer.R
 import com.example.musicplayer.databinding.SongOptionsBottomSheetBinding
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class BottomSheetSongOptions : BottomSheetDialogFragment(){
@@ -33,11 +35,11 @@ class BottomSheetSongOptions : BottomSheetDialogFragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.addToPlaylistLinearLayout.setOnClickListener{
+        binding.addToPlaylistButton.setOnClickListener{
            Toast.makeText(requireContext(), "add to playlist clicked", Toast.LENGTH_SHORT).show()
         }
 
-        binding.viewDetailsLinearLayout.setOnClickListener {
+        binding.viewDetailsButton.setOnClickListener {
             //Toast.makeText(requireContext(), "viewDetails clicked", Toast.LENGTH_SHORT).show()
 
             viewDetailsBottomSheet.isCancelable = false
@@ -45,12 +47,13 @@ class BottomSheetSongOptions : BottomSheetDialogFragment(){
             this.dismiss()
         }
 
-        binding.shareLinearLayout.setOnClickListener {
+        binding.shareSongButton.setOnClickListener {
             Toast.makeText(requireContext(), "Share song clicked", Toast.LENGTH_SHORT).show()
         }
 
-        binding.deleteSongLinearLayout.setOnClickListener {
+        binding.deleteSongButton.setOnClickListener {
             Toast.makeText(requireContext(), "Delete Song clicked", Toast.LENGTH_SHORT).show()
         }
     }
+
 }

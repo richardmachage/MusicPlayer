@@ -2,122 +2,82 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary_dark"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/primary_light"
     android:orientation="vertical"
     android:padding="5dp">
 
-    <LinearLayout
-        android:id="@+id/addToPlaylist_LinearLayout"
+    <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="Options"
+        android:textColor="@color/white"
+        android:textAlignment="center"
+        android:fontFamily="sans-serif-light"
+        android:textSize="18sp"
         android:padding="5dp"
+        android:layout_marginTop="5dp"
+        />
+    <com.google.android.material.button.MaterialButton
+        android:padding="10dp"
         android:layout_margin="10dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
-
-        >
-
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/add_circle_icon" />
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:fontFamily="sans-serif-light"
-            android:text="Add to playlist"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            />
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/viewDetails_LinearLayout"
+        android:id="@+id/addToPlaylist_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
+        android:text="Add to Playlist"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:textColor="@color/white"
+        android:textAllCaps="false"
+        app:icon="@drawable/add_circle_icon"
+        app:iconTint="@color/white"
+        app:iconGravity="textStart"
+        app:rippleColor="@color/dark_grey"
+        />
+    <com.google.android.material.button.MaterialButton
+        android:padding="10dp"
         android:layout_margin="10dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
-
-        >
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/options_icon"
-            android:layout_weight="1"
-            />
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:fontFamily="sans-serif-light"
-            android:text="View details"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/share_LinearLayout"
+        android:id="@+id/viewDetails_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
+        android:text="View details"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:textColor="@color/white"
+        android:textAllCaps="false"
+        app:icon="@drawable/options_icon"
+        app:iconTint="@color/white"
+        app:iconGravity="textStart"
+        app:rippleColor="@color/dark_grey"
+        />
+    <com.google.android.material.button.MaterialButton
+        android:padding="10dp"
         android:layout_margin="10dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        >
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/share_icon" />
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-light"
-            android:text="Share song"
-            android:layout_weight="1"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/deleteSong_LinearLayout"
+        android:id="@+id/shareSong_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
+        android:text="Share Song"
+        app:rippleColor="@color/dark_grey"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:textColor="@color/white"
+        android:textAllCaps="false"
+        app:icon="@drawable/share_icon"
+        app:iconTint="@color/white"
+        app:iconGravity="textStart"
+        />
+    <com.google.android.material.button.MaterialButton
+        android:padding="10dp"
         android:layout_margin="10dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-
-            android:src="@drawable/delete_icon" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:fontFamily="sans-serif-light"
-            android:text="Delete song"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
-
-
-    </LinearLayout>
+        android:id="@+id/deleteSong_button"
+        app:rippleColor="@color/dark_grey"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Delete Song"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:textColor="@color/white"
+        android:textAllCaps="false"
+        app:icon="@drawable/delete_icon"
+        app:iconTint="@color/white"
+        app:iconGravity="textStart"
+        />
 
 
 </LinearLayout>
