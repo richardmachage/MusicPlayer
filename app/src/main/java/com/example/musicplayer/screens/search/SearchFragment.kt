@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.activityViewModels
@@ -21,11 +22,14 @@ class SearchFragment : Fragment() {
     private lateinit var searchBinding: FragmentSearchBinding
     private val binding get() = searchBinding
     private val viewModel: MainViewModel by activityViewModels()
+    private lateinit  var filteredList : ArrayList<Song>
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         // Inflate the layout for this fragment
         searchBinding = FragmentSearchBinding.inflate(layoutInflater)
@@ -35,21 +39,19 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //binding.searchListRecyclerView.visibility = View.INVISIBLE
-        //binding.searchView.focusable = View.NOT_FOCUSABLE
-        binding.searchView.clearFocus()
+
         binding.searchListRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
-        var adapter = SearchViewRecyclerAdapter(requireContext(), viewModel.listOfSongs)
-        binding.searchListRecyclerView.adapter = adapter
-        adapter.notifyDataSetChanged()
+       // var adapter = SearchViewRecyclerAdapter(requireContext())
+        //binding.searchListRecyclerView.adapter = adapter
+        //adapter.notifyDataSetChanged()
 
         binding.searchListRecyclerView.onItemClick { recyclerView, position, v ->
 
             viewModel.myPlayer.reset()
             viewModel.setPlayer()
             viewModel.currentSongIndex = position
-            viewModel.currentMusic.value = viewModel.listOfSongs[position]
+            viewModel.currentMusic.value = filteredList[position]
             viewModel.selectSong()
             viewModel.playSong()
 
@@ -60,17 +62,28 @@ class SearchFragment : Fragment() {
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
             android.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                TODO()
-                return false;
+                return false
             }
             override fun onQueryTextChange(newText: String?): Boolean {
-                var filteredList = viewModel.searchSong(newText.toString())
+                filteredList = viewModel.searchSong(newText.toString()) as ArrayList<Song>
 
-                if(filteredList.isNotEmpty()){
-                    //binding.searchListRecyclerView.visibility = View.VISIBLE
-                    adapter.setList(filteredList as ArrayList<Song>)
+                if (!newText.isNullOrBlank()){
+                    if(filteredList.isNotEmpty()){
+                        //binding.searchListRecyclerView.visibility = View.VISIBLE
+                        var adapter = SearchViewRecyclerAdapter(requireContext())
+                        adapter.setList(filteredList as ArrayList<Song>)
+                        binding.searchListRecyclerView.adapter = adapter
+
+                    }
+                }else{
+                    filteredList as ArrayList
+                    filteredList.clear()
+                    var adapter = SearchViewRecyclerAdapter(requireContext())
+                    adapter.setList(filteredList)
+                    binding.searchListRecyclerView.adapter = adapter
                 }
-                return true;
+
+                return true
             }
         })
 

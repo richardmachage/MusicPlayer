@@ -8,9 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.musicplayer.databinding.SingleSongRecyclerViewBinding
 import com.example.musicplayer.models.Song
 
-class SearchViewRecyclerAdapter(val context: Context,
-                                var filteredListOfSongs: ArrayList<Song>) :
+class SearchViewRecyclerAdapter(val context: Context) :
     RecyclerView.Adapter<SearchViewHolder>() {
+
+    private lateinit var filteredListOfSongs: ArrayList<Song>
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
         val inflater = LayoutInflater.from(context)
         val binding = SingleSongRecyclerViewBinding.inflate(inflater,parent, false)

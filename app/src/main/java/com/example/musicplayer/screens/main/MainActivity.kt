@@ -281,5 +281,9 @@ class MainActivity : AppCompatActivity() {
 
         }, 0, 900)
     }
+
+    override fun onBackPressed() {
+
+    }
 }
 
