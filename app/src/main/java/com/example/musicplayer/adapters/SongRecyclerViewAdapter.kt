@@ -17,7 +17,6 @@ class SongRecyclerViewAdapter(val context: Context,
     override fun onCreateViewHolder( parent: ViewGroup, viewType: Int): songViewHolder {
         val inflater = LayoutInflater.from(context)
         val binding = SingleSongRecyclerViewBinding.inflate(inflater,parent, false)
-        //val view = inflater.inflate(R.layout.single_song_recycler_view, parent,false)
         return songViewHolder(binding)
     }
 
@@ -25,10 +24,6 @@ class SongRecyclerViewAdapter(val context: Context,
         holder.binding.apply {
             songNameTextView.text = listOfSongs[position].songName
             artistNameTextView.text = listOfSongs[position].songArtist
-
-            /*if (listOfSongs[position].isCurrentlyPlaying){
-                musicPlayingAnimation.visibility = View.VISIBLE
-            }*/
         }
 
 

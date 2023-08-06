@@ -25,7 +25,6 @@ const val MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 112
 //const val MY_PERMISSIONS_REQUEST_MANAGE_EXTERNAL_STORAGE = 113
 
 class MainViewModel : ViewModel() {
-
     lateinit var listOfSongs: ArrayList<Song>
     lateinit var context: Context
     var currentMusic = MutableLiveData<Song>()
@@ -36,7 +35,6 @@ class MainViewModel : ViewModel() {
     var isResourceSet: Boolean
     var currentSongIndex = 0
     var shuffleSongs = false
-    //lateinit var currentSongObject : Song
 
 
     init {
@@ -199,5 +197,8 @@ class MainViewModel : ViewModel() {
         myPlayer.isLooping = isRepeating
     }
 
+    fun searchSong(searchQuery: String): List<Song> = listOfSongs.filter { song ->
+        song.doesMatchSearchQuery(query = searchQuery)
+    }
 
 }

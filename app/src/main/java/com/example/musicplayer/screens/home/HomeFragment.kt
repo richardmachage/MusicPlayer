@@ -41,6 +41,7 @@ class HomeFragment : Fragment() {
 
         binding.songLabelTextview.text = "${viewModel.listOfSongs.size} Song(s)"
         //onClick Listener
+
         binding.songsListRecyclerView.onItemClick{recyclerView, position, v ->
             //Toast.makeText(requireContext(),"Song clicked: ${viewModel.listOfSongs[position].songName}", Toast.LENGTH_SHORT).show()
 
