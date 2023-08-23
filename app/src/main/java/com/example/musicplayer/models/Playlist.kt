@@ -1,3 +1,4 @@
 package com.example.musicplayer.models
 
-class Playlist(var name : String, var numOfSongs : Int)
+data class Playlist(var id: Long,
+                    var name: String)
