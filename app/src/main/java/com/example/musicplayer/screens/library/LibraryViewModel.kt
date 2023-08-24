@@ -28,7 +28,7 @@ class LibraryViewModel : ViewModel() {
             val nameColumn = cursor.getColumnIndex(MediaStore.Audio.Playlists.NAME)
 
             while (cursor.moveToNext()){
-                listOfPlayLists.add(Playlist(cursor.getLong(idColumn),cursor.getString(nameColumn)))
+                listOfPlayLists.add(Playlist(cursor.getLong(idColumn),contentResolver,cursor.getString(nameColumn)))
             }
         }
 

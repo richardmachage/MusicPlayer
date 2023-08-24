@@ -27,7 +27,7 @@ class PlaylistsRecyclerAdapter(
     override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
         holder.binding.apply {
             playlistNameTextview.text = myPlaylists[position].name
-            //numberOfSongsTextview.text ="${listOfPlaylists[position].numOfSongs.toString()} Songs"
+            numberOfSongsTextview.text ="${listOfPlaylists[position].numOfSongs} Songs"
         }
     }
 
