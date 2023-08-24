@@ -1,25 +1,22 @@
 package com.example.musicplayer.screens.library
 
 import android.content.ContentResolver
+import android.content.ContentValues
+import android.content.Context
 import android.provider.MediaStore
+import android.widget.Toast
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.musicplayer.models.Playlist
 
 class LibraryViewModel : ViewModel() {
-    var listOfPlaylits = mutableListOf<Playlist>()
+    //var listOfPlaylits = MutableLiveData{mutableListOf<Playlist>()}
 
     init {
         //listOfPlaylits = getPlaylists()
     }
 
-    private fun generatePlaylists(): ArrayList<Playlist> {
-        var listOfPlaylists = ArrayList<Playlist>()
-
-        for(i in 1..5) {
-          //  listOfPlaylists.add(Playlist("Heart Strings", 20))
-        }
-        return listOfPlaylists
-    }
 
     fun getPlaylists(contentResolver: ContentResolver): List<Playlist>{
         val listOfPlayLists = mutableListOf<Playlist>()
@@ -38,7 +35,20 @@ class LibraryViewModel : ViewModel() {
         return  listOfPlayLists
     }
 
-    fun addNewPlaylists(contentResolver: ContentResolver){
+    fun addNewPlaylists(context: Context, playlistName:String){
+        val contentResolver = context.contentResolver
+        val values = ContentValues()
+        values.put(MediaStore.Audio.Playlists.NAME, playlistName)
 
+        val uri = contentResolver.insert(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, values)
+
+        //uri holds the content URI of the newly created playlist if successful,
+        // or null if the insertion failed.
+        if (uri != null){
+            Toast.makeText(context, "Playlist $playlistName created successfully!", Toast.LENGTH_SHORT).show()
+        }else {
+            Toast.makeText(context, "Failed to create playlist $playlistName", Toast.LENGTH_SHORT).show()
+
+        }
     }
 }

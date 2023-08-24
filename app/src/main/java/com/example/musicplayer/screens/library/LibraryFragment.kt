@@ -10,12 +10,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Adapter
 import android.widget.EditText
 import android.widget.Toast
 import androidx.core.view.marginRight
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.musicplayer.R
 import com.example.musicplayer.models.Playlist
 import com.example.musicplayer.adapters.PlaylistsRecyclerAdapter
@@ -25,6 +27,7 @@ class LibraryFragment : Fragment() {
     private lateinit var libraryBinding: FragmentLibraryBinding
     private val binding get() = libraryBinding
     private val viewModel: LibraryViewModel by viewModels()
+    private lateinit var adapter : PlaylistsRecyclerAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,11 +48,12 @@ class LibraryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.playlistsRecyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        binding.playlistsRecyclerView.adapter =
+        adapter =
             PlaylistsRecyclerAdapter(
                 requireContext(),
                 viewModel.getPlaylists(requireContext().contentResolver) as ArrayList<Playlist>
             )
+        binding.playlistsRecyclerView.adapter = adapter
     }
 
     private fun addPlayListDialog() {
@@ -64,11 +68,9 @@ class LibraryFragment : Fragment() {
                 if (editText.text.isNullOrBlank()) {
                     Toast.makeText(requireContext(), "Name is Blank", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "Playlist Created ${editText.text}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    viewModel.addNewPlaylists(requireContext(),editText.text.toString())
+                    adapter.setDataset(viewModel.getPlaylists(requireContext().contentResolver) as ArrayList<Playlist>)
+                    adapter.notifyDataSetChanged()
                     dialog.dismiss()
                 }
             }
