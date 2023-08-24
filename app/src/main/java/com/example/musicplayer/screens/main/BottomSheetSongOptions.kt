@@ -20,6 +20,7 @@ class BottomSheetSongOptions : BottomSheetDialogFragment(){
     private val viewModel : MainViewModel by activityViewModels()
 
     private val viewDetailsBottomSheet = BottomSheetViewDetails()
+    private val addToPlaylistBottomSheet = BottomSheetAddToPlaylist()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,7 +37,8 @@ class BottomSheetSongOptions : BottomSheetDialogFragment(){
         super.onViewCreated(view, savedInstanceState)
 
         binding.addToPlaylistButton.setOnClickListener{
-           Toast.makeText(requireContext(), "add to playlist clicked", Toast.LENGTH_SHORT).show()
+            addToPlaylistBottomSheet.isCancelable = false
+            addToPlaylistBottomSheet.show(parentFragmentManager,"add to playlist bottom sheet")
         }
 
         binding.viewDetailsButton.setOnClickListener {

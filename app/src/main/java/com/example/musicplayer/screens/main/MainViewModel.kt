@@ -94,8 +94,7 @@ class MainViewModel : ViewModel() {
             MediaStore.Audio.Media.DATA
         )
         //filters
-        val selection =
-            "${MediaStore.Audio.Media.DURATION} >= ? AND ${MediaStore.Audio.Media.DATA} NOT LIKE ?"
+        val selection = "${MediaStore.Audio.Media.DURATION} >= ? AND ${MediaStore.Audio.Media.DATA} NOT LIKE ?"
         val selectionArgs = arrayOf(
             TimeUnit.SECONDS.toMillis(60).toString(), //filtered to Audio files longer than 60 secs
             "%Recordings%" // filters out the audio files in the recordings directory
@@ -149,16 +148,17 @@ class MainViewModel : ViewModel() {
         listOfSongs[currentSongIndex].isCurrentlyPlaying = false
     }
 
-    fun playNext(shuffle: Boolean) {
+    fun playNext(shuffle : Boolean ) {
         //currentSongObject.isCurrentlyPlaying = false
         currentMusic.value?.isCurrentlyPlaying = false
 
         myPlayer.reset()
         setPlayer()
 
-        if (shuffle) {
+        if(shuffle){
             currentSongIndex = Random.nextInt(listOfSongs.size + 1)
-        } else {
+        }
+        else {
             if (currentSongIndex != listOfSongs.lastIndex) {
                 currentSongIndex += 1
             } else {
@@ -181,7 +181,7 @@ class MainViewModel : ViewModel() {
         //currentSongObject = listOfSongs[currentSongIndex]
         currentMusic.value = listOfSongs[currentSongIndex]
         selectSong()
-        // setSeekBar()
+       // setSeekBar()
     }
 
     fun setPlayer() {
@@ -193,7 +193,13 @@ class MainViewModel : ViewModel() {
         )
     }
 
-    fun setSongRepeat(isRepeating: Boolean) {
+    fun setSongRepeat(isRepeating:Boolean){
         myPlayer.isLooping = isRepeating
     }
+
+    fun searchSong(searchQuery: String): List<Song> = listOfSongs.filter { song ->
+        song.doesMatchSearchQuery(query = searchQuery)
+    }
+
+
 }
