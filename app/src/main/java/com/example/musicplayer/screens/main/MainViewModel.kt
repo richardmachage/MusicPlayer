@@ -1,23 +1,23 @@
 package com.example.musicplayer.screens.main
 
+import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.Application
+import android.content.ContentUris
+import android.content.ContentValues
 import android.content.Context
 import android.content.pm.PackageManager
 import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.net.Uri
 import android.provider.MediaStore
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.musicplayer.adapters.SongRecyclerViewAdapter
+import com.example.musicplayer.models.Playlist
 import com.example.musicplayer.models.Song
-import java.util.Timer
-import java.util.TimerTask
 import java.util.concurrent.TimeUnit
-import kotlin.concurrent.timerTask
 import kotlin.random.Random
 
 const val MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 111
@@ -94,7 +94,8 @@ class MainViewModel : ViewModel() {
             MediaStore.Audio.Media.DATA
         )
         //filters
-        val selection = "${MediaStore.Audio.Media.DURATION} >= ? AND ${MediaStore.Audio.Media.DATA} NOT LIKE ?"
+        val selection =
+            "${MediaStore.Audio.Media.DURATION} >= ? AND ${MediaStore.Audio.Media.DATA} NOT LIKE ?"
         val selectionArgs = arrayOf(
             TimeUnit.SECONDS.toMillis(60).toString(), //filtered to Audio files longer than 60 secs
             "%Recordings%" // filters out the audio files in the recordings directory
@@ -148,17 +149,16 @@ class MainViewModel : ViewModel() {
         listOfSongs[currentSongIndex].isCurrentlyPlaying = false
     }
 
-    fun playNext(shuffle : Boolean ) {
+    fun playNext(shuffle: Boolean) {
         //currentSongObject.isCurrentlyPlaying = false
         currentMusic.value?.isCurrentlyPlaying = false
 
         myPlayer.reset()
         setPlayer()
 
-        if(shuffle){
+        if (shuffle) {
             currentSongIndex = Random.nextInt(listOfSongs.size + 1)
-        }
-        else {
+        } else {
             if (currentSongIndex != listOfSongs.lastIndex) {
                 currentSongIndex += 1
             } else {
@@ -181,7 +181,7 @@ class MainViewModel : ViewModel() {
         //currentSongObject = listOfSongs[currentSongIndex]
         currentMusic.value = listOfSongs[currentSongIndex]
         selectSong()
-       // setSeekBar()
+        // setSeekBar()
     }
 
     fun setPlayer() {
@@ -193,7 +193,7 @@ class MainViewModel : ViewModel() {
         )
     }
 
-    fun setSongRepeat(isRepeating:Boolean){
+    fun setSongRepeat(isRepeating: Boolean) {
         myPlayer.isLooping = isRepeating
     }
 
@@ -201,5 +201,46 @@ class MainViewModel : ViewModel() {
         song.doesMatchSearchQuery(query = searchQuery)
     }
 
+    @SuppressLint("Range")
+    fun addSongToPlaylist(context: Context, playlist: Playlist) {
+        val contentResolver = context.contentResolver
+
+        val playlistMemberUri =
+            MediaStore.Audio.Playlists.Members.getContentUri("external", playlist.id)
+
+        val projection = arrayOf(MediaStore.Audio.Playlists.Members.PLAY_ORDER)
+        val cursor = contentResolver.query(playlistMemberUri, projection, null, null, "${MediaStore.Audio.Playlists.Members.PLAY_ORDER} DESC")
+        val playOrder = if (cursor?.moveToFirst() == true) {
+            cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Playlists.Members.PLAY_ORDER)) + 1
+        } else {
+            0
+        }
+        cursor?.close()
+
+
+        val contentValues = ContentValues()
+        contentValues.put(MediaStore.Audio.Playlists.Members.AUDIO_ID, currentMusic.value?.songId)
+        contentValues.put(MediaStore.Audio.Playlists.Members.PLAY_ORDER, playOrder) // set your desired play order here
+
+
+        val insertUri = contentResolver.insert(playlistMemberUri, contentValues)
+
+
+        if (insertUri != null) {
+            Toast.makeText(
+                context,
+                "${currentMusic.value?.songName} added to ${playlist.name}",
+                Toast.LENGTH_SHORT
+            ).show()
+        } else {
+            Toast.makeText(
+                context,
+                "failed: songId= ${currentMusic.value?.songId} playlistId= ${playlist.id} ",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+
+    }
 
 }

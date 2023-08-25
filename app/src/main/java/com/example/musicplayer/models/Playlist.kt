@@ -6,7 +6,7 @@ import android.provider.MediaStore
 class Playlist(
     var id: Long,
     private val contentResolver: ContentResolver,
-    var name: String
+    var name: String, var path: String
 ) {
     var numOfSongs = numOfSongs()
     private fun numOfSongs(): Int {

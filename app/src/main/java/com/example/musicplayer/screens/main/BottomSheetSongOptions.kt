@@ -37,8 +37,10 @@ class BottomSheetSongOptions : BottomSheetDialogFragment(){
         super.onViewCreated(view, savedInstanceState)
 
         binding.addToPlaylistButton.setOnClickListener{
+
             addToPlaylistBottomSheet.isCancelable = false
             addToPlaylistBottomSheet.show(parentFragmentManager,"add to playlist bottom sheet")
+            this.dismiss()
         }
 
         binding.viewDetailsButton.setOnClickListener {

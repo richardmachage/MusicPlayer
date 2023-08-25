@@ -21,14 +21,15 @@ class LibraryViewModel : ViewModel() {
     fun getPlaylists(contentResolver: ContentResolver): List<Playlist>{
         val listOfPlayLists = mutableListOf<Playlist>()
         val uri = MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI
-        val projection = arrayOf(MediaStore.Audio.Playlists._ID,MediaStore.Audio.Playlists.NAME)
+        val projection = arrayOf(MediaStore.Audio.Playlists._ID,MediaStore.Audio.Playlists.NAME, MediaStore.Audio.Playlists.DATA)
 
         contentResolver.query(uri, projection,null,null,null)?.use { cursor->
             val idColumn = cursor.getColumnIndex(MediaStore.Audio.Playlists._ID)
             val nameColumn = cursor.getColumnIndex(MediaStore.Audio.Playlists.NAME)
+            val pathColumn = cursor.getColumnIndex(MediaStore.Audio.Playlists.DATA)
 
             while (cursor.moveToNext()){
-                listOfPlayLists.add(Playlist(cursor.getLong(idColumn),contentResolver,cursor.getString(nameColumn)))
+                listOfPlayLists.add(Playlist(cursor.getLong(idColumn),contentResolver,cursor.getString(nameColumn), cursor.getString(pathColumn)))
             }
         }
 
