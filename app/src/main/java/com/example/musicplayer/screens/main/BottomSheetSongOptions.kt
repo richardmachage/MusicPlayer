@@ -56,7 +56,9 @@ class BottomSheetSongOptions : BottomSheetDialogFragment(){
         }
 
         binding.deleteSongButton.setOnClickListener {
+
             Toast.makeText(requireContext(), "Delete Song clicked", Toast.LENGTH_SHORT).show()
+            viewModel.currentMusic.value?.let { song -> viewModel.deleteSong(requireContext(),song) }
         }
     }
 

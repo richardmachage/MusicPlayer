@@ -11,7 +11,9 @@ import com.example.musicplayer.R
 import com.example.musicplayer.R.drawable
 import com.example.musicplayer.databinding.ActivityMainBinding
 import android.Manifest
+import android.widget.ProgressBar
 import android.widget.SeekBar
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -28,7 +30,7 @@ class MainActivity : AppCompatActivity() {
 
     private val permissions = arrayOf(
         Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
         //Manifest.permission.MANAGE_EXTERNAL_STORAGE
     )
 
@@ -38,16 +40,8 @@ class MainActivity : AppCompatActivity() {
         mainBinding = ActivityMainBinding.inflate(layoutInflater) // inflate the binding feature
         setContentView(binding.root)
 
-        //create and instantiate the view model
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel.context = applicationContext
-        viewModel.setListOfSongs()
-        viewModel.setCurrentSongObject()
-
-        //setSongDetails(viewModel.currentSongObject)
-
-        //set softkeyboard not to affect screen
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
 
         //check if permission is granted and ask for it if not
         val permissionsToRequest = mutableListOf<String>()
@@ -65,148 +59,161 @@ class MainActivity : AppCompatActivity() {
                 permissionsToRequest.toTypedArray(),
                 PERMISSION_REQUEST_CODE
             )
-        }
+        } else
+        {
+            //create and instantiate the view model
+            viewModel.setListOfSongs()
+            viewModel.setCurrentSongObject()
 
-        //observer for currentMusic
-        viewModel.currentMusic.observe(this, Observer {song ->
-            binding.seekbar.max = viewModel.currentMusic.value?.songDuration?.toInt() ?:0
-            setSeekBar()
-            binding.songNameTextView.text = song.songName
-            binding.artistNameTextView.text = song.songArtist
-            //binding.songNameTextView.isSelected = true
-        })
 
-        //observer for play?pause button
-        viewModel.playButtonState.observe(this, Observer { isplaying ->
-            if (isplaying){
-                binding.playImagebutton.setImageResource(drawable.play_icon)
-                binding.songNameTextView.isSelected = false
-            }else{
-                binding.playImagebutton.setImageResource(drawable.pause_icon)
-                binding.songNameTextView.isSelected = true
+            //setSongDetails(viewModel.currentSongObject)
+
+            //set softkeyboard not to affect screen
+            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
+
+
+            //observer for currentMusic
+            viewModel.currentMusic.observe(this, Observer { song ->
+                binding.seekbar.max = viewModel.currentMusic.value?.songDuration?.toInt() ?: 0
+                setSeekBar()
+                binding.songNameTextView.text = song.songName
+                binding.artistNameTextView.text = song.songArtist
+                //binding.songNameTextView.isSelected = true
+            })
+
+            //observer for play?pause button
+            viewModel.playButtonState.observe(this, Observer { isplaying ->
+                if (isplaying) {
+                    binding.playImagebutton.setImageResource(drawable.play_icon)
+                    binding.songNameTextView.isSelected = false
+                } else {
+                    binding.playImagebutton.setImageResource(drawable.pause_icon)
+                    binding.songNameTextView.isSelected = true
+                }
+            })
+
+            // songs number display
+
+
+            // seekBar logic
+            binding.seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(
+                    seekBar: SeekBar?,
+                    progress: Int,
+                    fromUser: Boolean
+                ) {
+
+                }
+
+                override fun onStartTrackingTouch(p0: SeekBar?) {
+
+                }
+
+                override fun onStopTrackingTouch(p0: SeekBar?) {
+                    if (p0 != null) {
+                        viewModel.myPlayer.seekTo(p0.progress)
+                    } else {
+                        viewModel.selectSong()
+                        viewModel.playSong()
+                    }
+
+                }
+
+            })
+
+            // bottom navigation logic
+            binding.bottomNavigationView.setOnItemSelectedListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.home_bottom_nav -> navigateToHomeFragment()
+                    R.id.search_bottom_nav -> navigateToSearchFragment()
+                    else -> navigateToLibraryFragment()
+                }
+                true
             }
-        })
 
-        // songs number display
+            //Play button
+            binding.playImagebutton.setOnClickListener {
+                if (viewModel.myPlayer.isPlaying//binding.playImagebutton.drawable.constantState == resources.getDrawable(R.drawable.pause_icon,null).constantState
+                ) {
+                    //first change the icon to show the play icon
+                    // binding.playImagebutton.setImageResource(drawable.play_icon)
+                    //then pause the music player
+                    viewModel.pauseSong()
+                    viewModel.playButtonState.value = true
 
+                } else {
+                    //first change the icon
+                    //binding.playImagebutton.setImageResource(drawable.pause_icon)
 
-        // seekBar logic
-        binding.seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                    //then start the mediaPlayer and play a song
+                    if (!viewModel.isResourceSet) {
+                        viewModel.selectSong()
+                    }
 
-            }
-
-            override fun onStartTrackingTouch(p0: SeekBar?) {
-
-            }
-
-            override fun onStopTrackingTouch(p0: SeekBar?) {
-                if (p0 != null) {
-                    viewModel.myPlayer.seekTo(p0.progress)
-                }else{
-                    viewModel.selectSong()
                     viewModel.playSong()
+                    viewModel.playButtonState.value = false
+
+                }
+            }
+
+            //Next button
+            binding.nextImagebutton.setOnClickListener {
+
+                if (viewModel.myPlayer.isPlaying) {
+                    viewModel.playNext(viewModel.shuffleSongs)
+                    viewModel.playSong()
+                } else {
+                    viewModel.playNext(viewModel.shuffleSongs)
                 }
 
             }
 
-        })
-
-        // bottom navigation logic
-        binding.bottomNavigationView.setOnItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.home_bottom_nav -> navigateToHomeFragment()
-                R.id.search_bottom_nav -> navigateToSearchFragment()
-                else -> navigateToLibraryFragment()
-            }
-            true
-        }
-
-        //Play button
-        binding.playImagebutton.setOnClickListener {
-            if (  viewModel.myPlayer.isPlaying//binding.playImagebutton.drawable.constantState == resources.getDrawable(R.drawable.pause_icon,null).constantState
-            ) {
-                //first change the icon to show the play icon
-               // binding.playImagebutton.setImageResource(drawable.play_icon)
-                //then pause the music player
-                viewModel.pauseSong()
-                viewModel.playButtonState.value = true
-
-            }
-            else {
-                //first change the icon
-                //binding.playImagebutton.setImageResource(drawable.pause_icon)
-
-                //then start the mediaPlayer and play a song
-                if(!viewModel.isResourceSet){
-                    viewModel.selectSong()
+            //Previous button
+            binding.prevImageButton.setOnClickListener {
+                if (viewModel.myPlayer.isPlaying) {
+                    viewModel.playPrevious()
+                    viewModel.playSong()
+                } else {
+                    viewModel.playPrevious()
                 }
-
-                viewModel.playSong()
-                viewModel.playButtonState.value = false
-
-            }
-        }
-
-        //Next button
-        binding.nextImagebutton.setOnClickListener {
-
-            if(viewModel.myPlayer.isPlaying){
-                viewModel.playNext(viewModel.shuffleSongs)
-                viewModel.playSong()
-            }else{
-                viewModel.playNext(viewModel.shuffleSongs)
+                //setSongDetails(viewModel.listOfSongs[viewModel.currentSongIndex])
             }
 
-        }
 
-        //Previous button
-        binding.prevImageButton.setOnClickListener {
-            if(viewModel.myPlayer.isPlaying){
-                viewModel.playPrevious()
-                viewModel.playSong()
-            }else{
-                viewModel.playPrevious()
+            binding.repeatImagebutton.setOnClickListener {
+                if (binding.repeatImagebutton.drawable.constantState == resources.getDrawable(
+                        drawable.repeat_one_icon,
+                        null
+                    ).constantState
+                ) {
+                    binding.repeatImagebutton.setImageResource(drawable.repeat_icon)
+                    viewModel.setSongRepeat(isRepeating = false)
+                } else {
+                    binding.repeatImagebutton.setImageResource(drawable.repeat_one_icon)
+                    viewModel.setSongRepeat(isRepeating = true)
+                }
             }
-            //setSongDetails(viewModel.listOfSongs[viewModel.currentSongIndex])
-        }
 
+            binding.shuffleImagebutton.setOnClickListener {
+                if (binding.shuffleImagebutton.drawable.constantState == resources.getDrawable(
+                        drawable.no_shuffle_icon,
+                        null
+                    ).constantState
+                ) {
+                    binding.shuffleImagebutton.setImageResource(drawable.shuffle_icon)
+                    viewModel.shuffleSongs = false
+                    Toast.makeText(applicationContext, "Shuffle off", Toast.LENGTH_SHORT).show()
+                } else {
+                    binding.shuffleImagebutton.setImageResource(drawable.no_shuffle_icon)
+                    viewModel.shuffleSongs = true
+                    Toast.makeText(applicationContext, "Shuffle on", Toast.LENGTH_SHORT).show()
 
-        binding.repeatImagebutton.setOnClickListener {
-            if (binding.repeatImagebutton.drawable.constantState == resources.getDrawable(
-                    drawable.repeat_one_icon,
-                    null
-                ).constantState
-            ){
-                binding.repeatImagebutton.setImageResource(drawable.repeat_icon)
-                viewModel.setSongRepeat(isRepeating = false)
+                }
             }
-            else {
-                binding.repeatImagebutton.setImageResource(drawable.repeat_one_icon)
-                viewModel.setSongRepeat(isRepeating = true)
-            }
-        }
 
-        binding.shuffleImagebutton.setOnClickListener {
-            if (binding.shuffleImagebutton.drawable.constantState == resources.getDrawable(
-                    drawable.no_shuffle_icon,
-                    null
-                ).constantState
-            ){
-                binding.shuffleImagebutton.setImageResource(drawable.shuffle_icon)
-                viewModel.shuffleSongs = false
-                Toast.makeText(applicationContext,"Shuffle off", Toast.LENGTH_SHORT).show()
+            binding.songOptionsImagebutton.setOnClickListener {
+                bottomSheetSongOptions.show(supportFragmentManager, "Bottom sheet dialog")
             }
-            else {
-                binding.shuffleImagebutton.setImageResource(drawable.no_shuffle_icon)
-                viewModel.shuffleSongs = true
-                Toast.makeText(applicationContext,"Shuffle on", Toast.LENGTH_SHORT).show()
-
-            }
-        }
-
-        binding.songOptionsImagebutton.setOnClickListener {
-            bottomSheetSongOptions.show(supportFragmentManager,"Bottom sheet dialog")
         }
 
     }

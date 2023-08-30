@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.media.AudioAttributes
 import android.media.MediaPlayer
-import android.net.Uri
 import android.provider.MediaStore
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -150,7 +149,6 @@ class MainViewModel : ViewModel() {
     }
 
     fun playNext(shuffle: Boolean) {
-        //currentSongObject.isCurrentlyPlaying = false
         currentMusic.value?.isCurrentlyPlaying = false
 
         myPlayer.reset()
@@ -239,6 +237,44 @@ class MainViewModel : ViewModel() {
                 Toast.LENGTH_SHORT
             ).show()
         }
+
+
+    }
+
+    fun deleteSong(context:Context,song: Song) {
+        val deleteURI = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, song.songId)
+
+        if (myPlayer.isPlaying){
+            pauseSong()
+            playButtonState.value = false
+        }
+
+        try{
+           context.contentResolver.delete(deleteURI,null,null)
+            Toast.makeText(context,"Deleted successfully: ${song.songName}", Toast.LENGTH_SHORT).show()
+
+            //set updated list of songs
+            setListOfSongs()
+
+            //set player
+            myPlayer.reset()
+            setPlayer()
+            isResourceSet = false
+
+            //check if the deleted song was on the lastindex of array
+            currentMusic.value = if (currentSongIndex > listOfSongs.lastIndex){
+                currentSongIndex = listOfSongs.lastIndex
+                listOfSongs[currentSongIndex]
+            }else{
+                listOfSongs[currentSongIndex]
+            }
+
+            selectSong()
+
+        }catch (e:Exception){
+            Toast.makeText(context,"Error: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+
 
 
     }
